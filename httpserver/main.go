@@ -1,74 +1,36 @@
 package main
-
 import (
+	"context"
+	"flag"
 	"fmt"
 	"io"
-	"log"
+	"math/rand"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/cyuliu/golang/httpserver/metrics"
 )
-
-func main() {
+func main()  {
+	flag.Set("v", "4")
+	glog.V(2).Info("Starting http server...")
+	metrics.Register()
 	mux := http.NewServeMux()
-	path := []string{"/healthz", "/header", "/env", "/log"}
-	for _, p := range path {
-		mux.HandleFunc(p, requestHandle)
-	}
-	// 设置环境变量
-	setEnv()
-	err := http.ListenAndServe(":80", mux)
-	if err != nil {
-		log.Fatal(err)
-	}
+	mux.HandleFunc("/delay ", delayHandler)
+	mux.HandleFunc("/healthz", healthz)
+	mux.Handle("/metrics", promhttp.Handler())
 }
 
-func setEnv() {
-	os.Setenv("VERSION", "1.0.0")
-}
-
-// 请求处理
-func requestHandle(w http.ResponseWriter, r *http.Request) {
-	switch r.RequestURI {
-	case "/healthz":
-		healthCheck(w, r)
-	case "/header":
-		injectResquestHeaders(w, r)
-	case "/env":
-		getEnv(w, r)
-	case "/log":
-		localLog(w, r)
-	default:
-		w.WriteHeader(http.StatusNotFound)
-	}
+func delayHandler(writer http.ResponseWriter, request *http.Request) {
+	glog.V(4).Info("Entering delay handler")
+	timer := metrics.NewTimer()
 
 }
 
-// 处理日志
-func localLog(w http.ResponseWriter, r *http.Request) {
-	status := http.StatusOK
-	fmt.Printf("IP is %v, Code is %v", r.Host, status)
-	w.WriteHeader(status)
-}
-
-// 获取环境变量
-func getEnv(w http.ResponseWriter, r *http.Request) {
-	version := os.Getenv("VERSION")
-	w.Header().Set("X-VERSION", version)
-	w.WriteHeader(http.StatusOK)
-}
-
-// 处理请求头
-func injectResquestHeaders(w http.ResponseWriter, r *http.Request) {
-	for name, values := range r.Header {
-		for _, value := range values {
-			w.Header().Set(name, value)
-		}
-	}
-	w.WriteHeader(http.StatusOK)
-}
-
-// 健康检查
-func healthCheck(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "200")
-	w.WriteHeader(http.StatusOK)
+func healthz(writer http.ResponseWriter, request *http.Request) {
+	io.WriteString(writer, "ok\n")
 }
