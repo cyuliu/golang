@@ -1,6 +1,6 @@
 export tag=v2.0
 root:
-        export ROOT=github.com/homework/golang
+        export ROOT=github.com/cyuliu/golang
 build:
         echo "building httpserver binary"
         mkdir -p bin/amd64
