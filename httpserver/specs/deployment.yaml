@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyuliu-httpserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cyuliu-httpserver
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+      labels:
+        app: httpserver
+    spec:
+      containers:
+        - name: cyuliu-httpserver
+          imagePullPolicy: Always
+          image: cyuliu/httpserver:v2.0
+          ports:
+            - containerPort: 80
