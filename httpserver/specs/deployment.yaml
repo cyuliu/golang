@@ -13,7 +13,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "80"
       labels:
-        app: httpserver
+        app: cyuliu-httpserver
     spec:
       containers:
         - name: cyuliu-httpserver
