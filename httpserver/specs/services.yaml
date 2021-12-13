@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cyuliu-httpserver
+  name: httpserver
 spec:
   selector:
-    app: cyuliu-httpserver
+    app: httpserver
   ports:
   - name: web
     protocol: TCP
