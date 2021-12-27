@@ -1,31 +1,32 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: httpsserver
+  name: service0
 spec:
   gateways:
-    - httpsserver
+    - service0
   hosts:
-    - httpsserver.cyuliu.io
+    - '*'
   http:
-    - match:
-        - port: 443
-      route:
-        - destination:
-            host: httpserver.securesvc.svc.cluster.local
-            port:
-              number: 80
+  - match:
+      - uri:
+          exact: /service0
+    route:
+      - destination:
+          host: service0
+          port:
+            number: 80
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: httpsserver
+  name: service0
 spec:
   selector:
     istio: ingressgateway
   servers:
     - hosts:
-        - httpsserver.cyuliu.io
+        - '*'
       port:
         name: https-default
         number: 443

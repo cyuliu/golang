@@ -1,8 +1,11 @@
 ### deploy httpserver
 ```
-kubectl create ns securesvc
-kubectl label ns securesvc istio-injection=enabled
-kubectl create -f httpserver.yaml -n securesvc
+kubectl create ns tracing
+kubectl label ns tracing istio-injection=enabled
+kubectl -n tracing apply -f service0.yaml
+kubectl -n tracing apply -f service1.yaml
+kubectl -n tracing apply -f service2.yaml 
+kubectl apply -f istio-specs.yaml -n tracing
 ```
 ```
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=cyuliu Inc./CN=*.cyuliu.io' -keyout cyuliu.io.key -out cyuliu.io.crt
@@ -18,8 +21,5 @@ istio-ingressgateway   LoadBalancer   $INGRESS_IP
 
 ### access the httpserver via ingress
 ```
-curl --resolve httpsserver.cncamp.io:443:$INGRESS_IP https://httpsserver.cncamp.io/healthz -v -k
-curl --resolve httpsserver.cyuliu.io:443:10.108.251.207 https://httpsserver.cyuliu.io/healthz -v -k
+curl --resolve service.cyuliu.io:443:10.108.251.207 https://service.cyuliu.io/service0 -v -k
 ```
-![image](https://user-images.githubusercontent.com/8605741/147476818-56433be3-88e9-4111-b98c-a78d026c8fa4.png)
-
