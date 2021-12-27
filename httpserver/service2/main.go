@@ -54,7 +54,6 @@ func rootHandler(writer http.ResponseWriter, request *http.Request) {
 		io.WriteString(writer, fmt.Sprintf("%s=%s\n", k, v))
 	}
 	glog.V(4).Infof("Respond in %d ms", delay)
-	glog.V(4).Info("Exiting delay handler")
 }
 
 func randInt(min int, max int) int {
