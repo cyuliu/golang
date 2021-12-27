@@ -58,6 +58,11 @@ func delayHandler(writer http.ResponseWriter, request *http.Request) {
 	for key, value := range query {
 		io.WriteString(writer, fmt.Sprintf("%s=%s\n", key, value))
 	}
+	io.WriteString(writer, "===================Details of the http request header:============\n")
+	for k, v := range request.Header {
+		io.WriteString(writer, fmt.Sprintf("%s=%s\n", k, v))
+	}
+
 	// 随机等待
 	delay := randInt(10, 2000)
 	time.Sleep(time.Duration(delay) * time.Millisecond)
