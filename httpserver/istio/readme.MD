@@ -23,3 +23,4 @@ istio-ingressgateway   LoadBalancer   $INGRESS_IP
 ```
 curl --resolve service.cyuliu.io:443:10.108.251.207 https://service.cyuliu.io/service0 -v -k
 ```
+![image](https://user-images.githubusercontent.com/8605741/147497742-ad5831a0-3862-4462-bf3f-05a144f43472.png)
